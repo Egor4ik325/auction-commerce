@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 from .secret_key import SECRET_KEY
+from django.contrib.messages import constants
 
 import os
 
@@ -33,12 +34,13 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'auctions',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
+
+    'django.contrib.admin',  # administration panel
+    'django.contrib.auth',  # user authentication/registration
+    'django.contrib.contenttypes',  # ...
+    'django.contrib.sessions',  # cookie-based user sessions
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',  # js, css, png, jpg
 ]
 
 MIDDLEWARE = [
@@ -82,7 +84,7 @@ DATABASES = {
     }
 }
 
-# Change default user model for authentication (default: auth.User)
+# User model for authentication (default: auth.User)
 AUTH_USER_MODEL = 'auctions.User'
 
 # Password validation
@@ -122,3 +124,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Change default message tags tex
+MESSAGE_TAGS = {
+    constants.DEBUG: 'alert-info',
+    constants.INFO: 'alert-info',
+    constants.SUCCESS: 'alert-success',
+    constants.WARNING: 'alert-warning',
+    constants.ERROR: 'alert-danger',
+}

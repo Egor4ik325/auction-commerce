@@ -1,0 +1,18 @@
+{# Django messages #}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} my-3" id="msg">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+{# Hide messages after 2000 ms #}
+<script>
+    setTimeout(function(){
+        // Remove non-empty messages
+        if ($('.alert-info').length > 0) {
+            $('.alert-info').remove();
+        }
+    }, 2000)
+</script> 
