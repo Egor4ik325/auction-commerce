@@ -5,38 +5,27 @@
     <h2>Register</h2>
 
     {# Django messages to Bootstrap alerts #}
-    {% if messages %}
-        {% for message in messages %}
-            {% if message.tabs == 'error' %}
-                <div class="alert alert-danger">
-                    {{ message }}
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-
-    {% comment %} {% if message %}
-        <div>{{ message }}</div>
-    {% endif %} {% endcomment %}
-
-    <form action="{% url 'register' %}" method="post">
+    {% include 'auctions/messages.html' %}
+    
+    <form class="my-3" action="{% url 'register' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+            <input class="form-control" autofocus type="text" name="username" placeholder="Username" required>
         </div>
         <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
+            <input class="form-control" type="email" name="email" placeholder="Email Address" required>
         </div>
         <div class="form-group">
-            <input class="form-control" type="tel" name="phone" placeholder="Telephone number">
+            <input class="form-control" type="tel" name="phone" 
+            pattern="(\+\d)+[- ]*([0-9]){3}[- ]*([0-9]){3}[- ]*([0-9]){2}[- ]*([0-9]){2}" title="+7 912 233-41-22" placeholder="Iternational phone number" required>
         </div>
         <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
+            <input class="form-control" type="password" name="password" placeholder="Password" required>
         </div>
         <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password" required>
         </div>
-        <input class="btn btn-primary" type="submit" value="Register">
+        <input class="btn btn-primary px-4" type="submit" value="Register">
     </form>
 
     Already have an account? <a href="{% url 'login' %}">Log In here.</a>

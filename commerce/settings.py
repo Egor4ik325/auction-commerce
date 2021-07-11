@@ -35,11 +35,13 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'auctions',
 
+    'phonenumber_field',  # support for PhoneNumberField
+
     'django.contrib.admin',  # administration panel
     'django.contrib.auth',  # user authentication/registration
     'django.contrib.contenttypes',  # ...
     'django.contrib.sessions',  # cookie-based user sessions
-    'django.contrib.messages',
+    'django.contrib.messages',  # django webiste notification system
     'django.contrib.staticfiles',  # js, css, png, jpg
 ]
 
@@ -134,3 +136,7 @@ MESSAGE_TAGS = {
     constants.WARNING: 'alert-warning',
     constants.ERROR: 'alert-danger',
 }
+
+
+# Explicitly define default auto field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
