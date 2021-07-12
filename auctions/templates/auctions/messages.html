@@ -5,14 +5,13 @@
             {{ message }}
         </div>
     {% endfor %}
-{% endif %}
 
-{# Hide messages after 2000 ms #}
-<script>
-    setTimeout(function(){
-        // Remove non-empty messages
-        if ($('.alert-info').length > 0) {
-            $('.alert-info').remove();
-        }
-    }, 2000)
-</script> 
+    {# Hide messages after 2000 ms #}
+    <script>
+        setTimeout(function(){
+            if ($('.alert-info').length > 0) {
+                $('.alert-info').remove();
+            }
+        }, 2000)
+    </script> 
+{% endif %}

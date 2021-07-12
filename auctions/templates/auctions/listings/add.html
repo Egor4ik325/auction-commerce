@@ -1,0 +1,20 @@
+{% extends 'auctions/layout.html' %} 
+{% load i18n %}
+
+{% block body %}
+  <h2>Create listing</h2>
+
+  {% include 'auctions/messages.html' %}
+
+  <form action="{% url 'add_listing' %}" method="POST">
+    {% csrf_token %} {{ form.as_p }}
+    <input type="submit" value="{% trans "Submit" %}">
+  </form>
+
+  <style>
+    form > .helptext {
+      font-size: 12px;
+    }
+  </style>
+
+{% endblock body %}

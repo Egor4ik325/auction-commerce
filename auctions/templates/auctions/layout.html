@@ -12,7 +12,8 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
+        <!--Navigation panel-->
+        <h1>Auctions e-commerce platform</h1>
         <div>
             {% if user.is_authenticated %}
                 Signed in as <strong>{{ user.username }}</strong>.
@@ -20,23 +21,25 @@
                 Not signed in.
             {% endif %}
         </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
-            </li>
-            {% if user.is_authenticated %}
+        <nav>
+            <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
                 </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-            {% endif %}
-        </ul>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
         <hr>
         {% block body %}
         {% endblock %}

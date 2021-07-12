@@ -140,3 +140,6 @@ MESSAGE_TAGS = {
 
 # Explicitly define default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Url login for login_required function decorator
+LOGIN_URL = '/login/'

@@ -1,15 +1,22 @@
+from datetime import timedelta, timezone, datetime
+
 from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from .forms import UserCreationForm
+
+from .forms import UserCreationForm, ListingForm
 
 UserModel = get_user_model()
 
 
 def index(request):
+    """List all active listings."""
+    # All user's listings
+    # listings = UserModel.objects.listings
     return render(request, "auctions/index.html")
 
 
@@ -49,7 +56,7 @@ def register(request):
 
         # Create form & validate all user fields (.clean, .clear_field, validators)
         user_form = UserCreationForm(
-            data={'username': username, 'email': email, 'phone': phone, 'password1': password, 'password2': confirmation})
+            data={'username': username, 'email': email, 'phone': phone, 'password': password, 'password1': password, 'password2': confirmation})
 
         # Check form errors
         if user_form.is_valid():
@@ -66,7 +73,7 @@ def register(request):
 
             # Login into newly created user account
             login(request, user)
-            messages.info(request, "Successfuly registred an account!")
+            messages.info(request, "Successfuly registred new account!")
             return HttpResponseRedirect(reverse("index"))
         else:
             # Render errors from all validated form fields
@@ -77,3 +84,56 @@ def register(request):
             return render(request, "auctions/register.html")
     else:
         return render(request, "auctions/register.html")
+
+
+def listing(request, listing_id):
+    """Render full listing webpage."""
+    pass
+
+
+@login_required(login_url='/login/')
+def add_listing(request):
+    """Render form to create new listing."""
+    if request.method == 'POST':
+        # Fill form with data
+        form = ListingForm(data=request.POST or None)
+        # Validate form data
+        if form.is_valid():
+            # Loged in AUTH_USER_MODEL user instance
+            user = request.user
+            # Cleaned listing model instance (ModelForm specific)
+            listing = form.save(commit=False)
+            # Modify listing object
+            listing.seller = user
+            # Save listing object to database
+            listing.save()
+            # Redirect to home page
+            return redirect(reverse('index'))
+        else:
+            # Return form error
+            for field, errors in form.errors.items():
+                for err in errors:
+                    messages.error(request, f'{field}: {err}')
+            # Return populated form back to the client
+            context = {'form': form}
+            return render(request, 'auctions/')
+
+    # Get current time with timezone offset
+    msk_tz = timezone(timedelta(hours=3), 'MSK')
+    # Always ceil default hour
+    cur_dt = datetime.now(tz=msk_tz) + timedelta(hours=1)
+    cur_dt_str = cur_dt.strftime('%Y-%m-%d %H:00:00')
+    # Dynamicic initial start_time (unbound form)
+    form = ListingForm(initial={'start_time': cur_dt_str})
+    context = {'form': form}
+    return render(request, "auctions/listings/add.html", context, content_type='text/html', status=200)
+
+
+def delete_listing(request, listing_id):
+    """Delete listing with id=listing_id."""
+    pass
+
+
+def update_listing(request, listing_id):
+    """Return form to edit created listing."""
+    pass
