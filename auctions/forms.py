@@ -18,6 +18,36 @@ class UserCreationForm(forms.UserCreationForm):
         fields = ['username', 'password', 'phone']
 
 
+class TimeWidget(TimeInput):
+    input_type = 'time'
+
+
+class DateWidget(DateInput):
+    input_type = 'date'
+
+    def __init__(self, *args, **kwargs):
+        # Always override widget format
+        kwargs['format'] = '%Y-%m-%d'
+        super().__init__(*args, **kwargs)
+
+
+def current_datetime_strings():
+    """Get current date and time with timezone offset."""
+    msk_tz = timezone(timedelta(hours=3), 'MSK')
+    cur_dt = datetime.now(tz=msk_tz) + timedelta(hours=1)
+    cur_time_str = cur_dt.strftime('%H:00:00')
+    cur_date_str = cur_dt.strftime('%Y-%m-%d')
+    return cur_time_str, cur_date_str
+
+
+def current_time_string():
+    return current_datetime_strings()[0]
+
+
+def current_date_string():
+    return current_datetime_strings()[1]
+
+
 class ListingForm(ModelForm):
     """
     Listing form, used for:
@@ -26,6 +56,16 @@ class ListingForm(ModelForm):
     3. server-side ListingForm validation;
     4. cleanded Model instance saving.
     """
+    # Split model start_datetime, end_datetime into multiple fields
+    start_time = TimeField(required=True, widget=TimeWidget,
+                           label=_("Listing start time"), initial=current_time_string())
+    start_date = DateField(required=True, widget=DateWidget,
+                           label=_("Listing start date"), initial=current_date_string())
+    end_time = TimeField(required=True, widget=TimeWidget,
+                         label=_("Listing end time"))
+    end_date = DateField(required=True, widget=DateWidget,
+                         label=_("Listing end date"))
+
     class Meta:
         """
         Attribute-style form customization.
@@ -34,7 +74,7 @@ class ListingForm(ModelForm):
         model = ListingModel
         # Editable form fields
         fields = ["title", "condition", "starting_price",
-                  "start_datetime", "end_datetime", "description"]
+                  "start_time", "start_date", "end_time", "end_date", "description"]
         widgets = {"description": Textarea(
             attrs={'cols': 80, 'rows': 10, 'class': 'form-control'})}
         # field help_text is not HTML escaped in autoform
@@ -45,22 +85,14 @@ class ListingForm(ModelForm):
         """
         Statement-style form customization.
         """
-        def current_datetime_string():
-            """Get current time with timezone offset."""
-            msk_tz = timezone(timedelta(hours=3), 'MSK')
-            cur_dt = datetime.now(tz=msk_tz) + timedelta(hours=1)
-            cur_dt_str = cur_dt.strftime('%Y-%m-%d %H:00:00')
-            return cur_dt_str
-
-        # Default dynamic initial values:
-        kwargs['initial'] = kwargs.get('initial', {})
-        kwargs['initial']['start_datetime'] = current_datetime_string()
+        # Modify init arguments (modify fields via __init__)
+        # ...
 
         # Pass all got arguments to the parent class
         super(ModelForm, self).__init__(*args, **kwargs)
 
-        # Post-init:
-        # TODO: move all HTML related to the template
+        # Post-init (modify fields directly):
+        # TODO: move form layout to the template
         # Rendering customization (only visible fields)
         for boundfield in self.visible_fields():
             # Change class atribute of widget of fields
