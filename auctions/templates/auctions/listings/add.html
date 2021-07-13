@@ -7,8 +7,9 @@
   {% include 'auctions/messages.html' %}
 
   <form action="{% url 'add_listing' %}" method="POST">
-    {% csrf_token %} {{ form.as_p }}
-    <input type="submit" value="{% trans "Submit" %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="form-control" type="submit" value="{% trans "Submit" %}">
   </form>
 
   <style>

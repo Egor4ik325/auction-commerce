@@ -49,11 +49,11 @@ class ListingModel(models.Model):
         choices=Condition.choices
     )
     starting_price = models.FloatField(_("Listing startign price"))
-    start_time = models.DateTimeField(
+    start_datetime = models.DateTimeField(
         verbose_name=_("Listing start time"),
         help_text=_("Time when listing starts at the auction")
     )
-    end_time = models.DateTimeField(
+    end_datetime = models.DateTimeField(
         verbose_name=_("Listing start time"),
         help_text=_("Time when listing ends at the auction")
     )

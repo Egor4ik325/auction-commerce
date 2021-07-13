@@ -1,5 +1,3 @@
-from datetime import timedelta, timezone, datetime
-
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -118,13 +116,8 @@ def add_listing(request):
             context = {'form': form}
             return render(request, 'auctions/')
 
-    # Get current time with timezone offset
-    msk_tz = timezone(timedelta(hours=3), 'MSK')
-    # Always ceil default hour
-    cur_dt = datetime.now(tz=msk_tz) + timedelta(hours=1)
-    cur_dt_str = cur_dt.strftime('%Y-%m-%d %H:00:00')
-    # Dynamicic initial start_time (unbound form)
-    form = ListingForm(initial={'start_time': cur_dt_str})
+    # Empty unbound form
+    form = ListingForm()
     context = {'form': form}
     return render(request, "auctions/listings/add.html", context, content_type='text/html', status=200)
 

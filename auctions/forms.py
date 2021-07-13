@@ -1,5 +1,8 @@
+from datetime import timedelta, timezone, datetime
+
 from django.contrib.auth import forms, get_user_model
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, TimeField, DateField, TimeInput, DateInput, DateTimeInput, Textarea
+from django.utils.translation import ugettext_lazy as _
 from .models import ListingModel
 
 
@@ -25,22 +28,42 @@ class ListingForm(ModelForm):
     """
     class Meta:
         """
-        Override default ModelForm settings
-        from inside a class.
+        Attribute-style form customization.
+        Override default ModelForm settings.
         """
         model = ListingModel
+        # Editable form fields
         fields = ["title", "condition", "starting_price",
-                  "start_time", "end_time", "description"]
+                  "start_datetime", "end_datetime", "description"]
         widgets = {"description": Textarea(
-            attrs={'cols': 80, 'rows': 20, 'class': 'form-control'})}
+            attrs={'cols': 80, 'rows': 10, 'class': 'form-control'})}
+        # field help_text is not HTML escaped in autoform
+        help_texts = {
+            "description": 'Description of item at auction'}
 
     def __init__(self, *args, **kwargs):
         """
         Statement-style form customization.
         """
+        def current_datetime_string():
+            """Get current time with timezone offset."""
+            msk_tz = timezone(timedelta(hours=3), 'MSK')
+            cur_dt = datetime.now(tz=msk_tz) + timedelta(hours=1)
+            cur_dt_str = cur_dt.strftime('%Y-%m-%d %H:00:00')
+            return cur_dt_str
+
+        # Default dynamic initial values:
+        kwargs['initial'] = kwargs.get('initial', {})
+        kwargs['initial']['start_datetime'] = current_datetime_string()
+
         # Pass all got arguments to the parent class
         super(ModelForm, self).__init__(*args, **kwargs)
 
-        # Change class atribute of widget of field of all visible boundfields
+        # Post-init:
+        # TODO: move all HTML related to the template
+        # Rendering customization (only visible fields)
         for boundfield in self.visible_fields():
+            # Change class atribute of widget of fields
             boundfield.field.widget.attrs['class'] = 'form-control'
+            # Format help_text for HTML form
+            boundfield.field.help_text = f'<small class="form-text text-muted">{boundfield.field.help_text}</small>'
