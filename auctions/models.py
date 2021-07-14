@@ -48,7 +48,7 @@ class ListingModel(models.Model):
         verbose_name=_("Item condition"), max_length=50,
         choices=Condition.choices
     )
-    starting_price = models.FloatField(_("Listing startign price"))
+    starting_price = models.FloatField(_("Listing startign price (in $)"))
     start_datetime = models.DateTimeField(
         verbose_name=_("Listing start time"),
         help_text=_("Time when listing starts at the auction")
@@ -57,3 +57,6 @@ class ListingModel(models.Model):
         verbose_name=_("Listing start time"),
         help_text=_("Time when listing ends at the auction")
     )
+
+    def __str__(self):
+        return f'{self.title}, {int(self.starting_price)}$'
