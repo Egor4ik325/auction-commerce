@@ -1,7 +1,7 @@
 from datetime import timedelta, timezone, datetime
 
 from django.contrib.auth import forms, get_user_model
-from django.forms import ModelForm, TimeField, DateField, TimeInput, DateInput, DateTimeInput, Textarea
+from django.forms import ModelForm, TimeField, DateField, TimeInput, DateInput, DateTimeInput, Textarea, HiddenInput
 from django.utils.translation import ugettext_lazy as _
 from .models import ListingModel
 
@@ -35,7 +35,7 @@ def current_datetime_strings():
     """Get current date and time with timezone offset."""
     msk_tz = timezone(timedelta(hours=3), 'MSK')
     cur_dt = datetime.now(tz=msk_tz) + timedelta(hours=1)
-    cur_time_str = cur_dt.strftime('%H:00:00')
+    cur_time_str = cur_dt.strftime('%H:00')
     cur_date_str = cur_dt.strftime('%Y-%m-%d')
     return cur_time_str, cur_date_str
 
@@ -74,9 +74,11 @@ class ListingForm(ModelForm):
         model = ListingModel
         # Editable form fields
         fields = ["title", "condition", "starting_price",
-                  "start_time", "start_date", "end_time", "end_date", "description"]
+                  "start_time", "start_date", "end_time", "end_date", "description", "start_datetime", "end_datetime"]
         widgets = {"description": Textarea(
-            attrs={'cols': 80, 'rows': 10, 'class': 'form-control'})}
+            attrs={'cols': 80, 'rows': 10, 'class': 'form-control'}),
+            # Make fields passed to model instance
+            'start_datetime': HiddenInput, 'end_datetime': HiddenInput}
         # field help_text is not HTML escaped in autoform
         help_texts = {
             "description": 'Description of item at auction'}
@@ -86,7 +88,14 @@ class ListingForm(ModelForm):
         Statement-style form customization.
         """
         # Modify init arguments (modify fields via __init__)
-        # ...
+        if kwargs:
+            # Assign date and time to model datetime field
+            if kwargs['data']:
+                kwargs['data']._mutable = True
+                # Modify django.http.request.QueryDict argument or self.data directly
+                kwargs['data']['start_datetime'] = f"{kwargs['data']['start_date']} {kwargs['data']['start_time']}"
+                kwargs['data']['end_datetime'] = f"{kwargs['data']['end_date']} {kwargs['data']['end_time']}"
+                kwargs['data']._mutable = False
 
         # Pass all got arguments to the parent class
         super(ModelForm, self).__init__(*args, **kwargs)
