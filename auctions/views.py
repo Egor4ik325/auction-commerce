@@ -1,5 +1,3 @@
-from datetime import timedelta, timezone, datetime
-
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -9,6 +7,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from .forms import UserCreationForm, ListingForm
+from .util_datetime import current_datetime
 
 UserModel = get_user_model()
 
@@ -19,8 +18,7 @@ def index(request):
     users = UserModel.objects.all()
     listings = []
     for user in users:
-        msk_tz = timezone(timedelta(hours=3), 'MSK')
-        cur_datetime = datetime.now(tz=msk_tz)
+        cur_datetime = current_datetime()
         # Query all active listings (instance.RelatedManager.QuerySet)
         listings.extend(user.listings.filter(end_datetime__gt=cur_datetime))
 

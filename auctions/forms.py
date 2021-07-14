@@ -1,9 +1,9 @@
-from datetime import timedelta, timezone, datetime
-
 from django.contrib.auth import forms, get_user_model
 from django.forms import ModelForm, TimeField, DateField, TimeInput, DateInput, DateTimeInput, Textarea, HiddenInput
 from django.utils.translation import ugettext_lazy as _
 from .models import ListingModel
+
+from .util_datetime import current_datetime, current_date_string
 
 
 class UserCreationForm(forms.UserCreationForm):
@@ -31,21 +31,11 @@ class DateWidget(DateInput):
         super().__init__(*args, **kwargs)
 
 
-def current_datetime_strings():
-    """Get current date and time with timezone offset."""
-    msk_tz = timezone(timedelta(hours=3), 'MSK')
-    cur_dt = datetime.now(tz=msk_tz) + timedelta(hours=1)
-    cur_time_str = cur_dt.strftime('%H:00')
-    cur_date_str = cur_dt.strftime('%Y-%m-%d')
-    return cur_time_str, cur_date_str
-
-
-def current_time_string():
-    return current_datetime_strings()[0]
-
-
-def current_date_string():
-    return current_datetime_strings()[1]
+def round_current_time_string():
+    """Custom hour rounding time str formatting."""
+    cur_dt = current_datetime()
+    cur_time = cur_dt.strftime('%H:00')
+    return cur_time
 
 
 class ListingForm(ModelForm):
@@ -58,7 +48,7 @@ class ListingForm(ModelForm):
     """
     # Split model start_datetime, end_datetime into multiple fields
     start_time = TimeField(required=True, widget=TimeWidget,
-                           label=_("Listing start time"), initial=current_time_string())
+                           label=_("Listing start time"), initial=round_current_time_string())
     start_date = DateField(required=True, widget=DateWidget,
                            label=_("Listing start date"), initial=current_date_string())
     end_time = TimeField(required=True, widget=TimeWidget,

@@ -1,10 +1,10 @@
-from datetime import timedelta, timezone, datetime
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+
+from .util_datetime import current_datetime
 
 # Models = database schema
 # blank | null | default | unique | primary_key
@@ -65,8 +65,7 @@ class ListingModel(models.Model):
 
     def is_started(self):
         """Determine weather listing is started or not."""
-        msk_tz = timezone(timedelta(hours=3), 'MSK')
-        cur_datetime = datetime.now(tz=msk_tz)
+        cur_datetime = current_datetime()
         return cur_datetime > self.start_datetime
 
     def price():
