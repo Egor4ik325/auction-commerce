@@ -1,3 +1,5 @@
+from datetime import timedelta, timezone, datetime
+
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -13,9 +15,17 @@ UserModel = get_user_model()
 
 def index(request):
     """List all active listings."""
-    # All user's listings
-    # listings = UserModel.objects.listings
-    return render(request, "auctions/index.html")
+    # Query all users saved in database (class.Manager.QuerySet)
+    users = UserModel.objects.all()
+    listings = []
+    for user in users:
+        msk_tz = timezone(timedelta(hours=3), 'MSK')
+        cur_datetime = datetime.now(tz=msk_tz)
+        # Query all active listings (instance.RelatedManager.QuerySet)
+        listings.extend(user.listings.filter(end_datetime__gt=cur_datetime))
+
+    context = {'listings': listings}
+    return render(request, "auctions/index.html", context)
 
 
 def login_view(request):
@@ -62,6 +72,7 @@ def register(request):
                 # Create new user via UserManager (password hashing, etc.) (doesn't validate passed user fields)
                 user = UserModel.objects.create_user(
                     username, email, password, phone=phone)
+                # TODO: user.full_clean()
                 # Save created user in the database
                 # or: save form model instance (data)
                 user.save()

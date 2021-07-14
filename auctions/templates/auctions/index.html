@@ -5,5 +5,20 @@
     
     {% include 'auctions/messages.html' %}
 
-    TODO
+    {% for listing in listings %}
+        <p><strong>{{ listing.title }}</strong></p>
+        <p>Price: <em>${{ listing.starting_price }}</em></p>
+        {% if listing.is_started %}
+            Started:
+        {% else %}
+            Starts:
+        {% endif %}
+        {{ listing.start_datetime }}
+        </p>
+        <p>Ends: {{ listing.end_datetime }}</p>
+        <hr>
+    {% empty %}
+        <p>No active listings</p>
+    {% endfor %}
+
 {% endblock %}

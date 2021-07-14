@@ -1,3 +1,5 @@
+from datetime import timedelta, timezone, datetime
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
@@ -27,9 +29,9 @@ class ListingModel(models.Model):
     seller = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        verbose_name=_("Item seller"),
         related_name='listings',
-        help_text=_("Enter creator of the listing")
+        verbose_name=_("Item seller"),
+        help_text=_("Enter creator of the listing"),
     )
     title = models.CharField(max_length=50)
     description = models.TextField(
@@ -60,3 +62,12 @@ class ListingModel(models.Model):
 
     def __str__(self):
         return f'{self.title}, {int(self.starting_price)}$'
+
+    def is_started(self):
+        """Determine weather listing is started or not."""
+        msk_tz = timezone(timedelta(hours=3), 'MSK')
+        cur_datetime = datetime.now(tz=msk_tz)
+        return cur_datetime > self.start_datetime
+
+    def price():
+        pass
