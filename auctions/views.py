@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
@@ -138,9 +138,22 @@ def add_listing(request):
     return render(request, "auctions/listings/add.html", context, content_type='text/html', status=200)
 
 
+def owner_required(func):
+    """Check weather user is the owner of requesting listing."""
+    def inner(request, listing_id):
+        l = ListingModel.objects.get(pk=listing_id)
+        if l:
+            if l.seller == request.user:
+                return func(request, listing_id)
+        raise Http404()
+    return inner
+
+
+@owner_required
 def delete_listing(request, listing_id):
     """Delete listing with id=listing_id."""
-    pass
+    ListingModel.objects.get(pk=listing_id).delete()
+    return redirect(reverse('index'))
 
 
 def update_listing(request, listing_id):
