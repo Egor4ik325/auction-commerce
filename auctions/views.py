@@ -117,13 +117,16 @@ def add_listing(request):
             # Redirect to home page
             return redirect(reverse('index'))
         else:
-            # Return form error
+            # Custom (message-based) form errors rendering
             for field, errors in form.errors.items():
+                # Iterate field and non-field (model) errors
                 for err in errors:
                     messages.error(request, f'{field}: {err}')
+            # Clear all errors to avoid dublicate rendering
+            form.errors.clear()
             # Return populated form back to the client
             context = {'form': form}
-            return render(request, 'auctions/')
+            return render(request, 'auctions/listings/add.html', context)
 
     # Empty unbound form
     form = ListingForm()

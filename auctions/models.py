@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
@@ -53,12 +55,21 @@ class ListingModel(models.Model):
     starting_price = models.FloatField(_("Listing startign price (in $)"))
     start_datetime = models.DateTimeField(
         verbose_name=_("Listing start time"),
-        help_text=_("Time when listing starts at the auction")
+        help_text=_("Time when listing starts at the auction (>now)"),
+        validators=[MinValueValidator(current_datetime())]
     )
     end_datetime = models.DateTimeField(
         verbose_name=_("Listing start time"),
-        help_text=_("Time when listing ends at the auction")
+        help_text=_("Time when listing ends at the auction (>now)"),
+        validators=[MinValueValidator(current_datetime())]
     )
+
+    def clean(self):
+        """Custom model validation. clean() = pass in BaseModel."""
+        if self.start_datetime > self.end_datetime:
+            raise ValidationError({
+                'start_datetime': _("Listing start time is greater than listing end time!")
+            })
 
     def __str__(self):
         return f'{self.title}, {int(self.starting_price)}$'
