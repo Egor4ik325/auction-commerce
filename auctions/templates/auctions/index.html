@@ -6,7 +6,7 @@
     {% include 'auctions/messages.html' %}
 
     {% for listing in listings %}
-        <p><strong>{{ listing.title }}</strong></p>
+        <h4><a href="{% url 'listing' listing.listing_id %}">{{ listing.title }}</a></h4>
         <p>Price: <em>${{ listing.starting_price }}</em></p>
         {% if listing.is_started %}
             Started:

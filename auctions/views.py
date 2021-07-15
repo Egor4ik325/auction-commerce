@@ -8,6 +8,7 @@ from django.contrib import messages
 
 from .forms import UserCreationForm, ListingForm
 from .util_datetime import current_datetime
+from .models import ListingModel
 
 UserModel = get_user_model()
 
@@ -94,8 +95,11 @@ def register(request):
 
 
 def listing(request, listing_id):
-    """Render full listing webpage."""
-    pass
+    """Render full listing webpage (render listing model)."""
+    # Get specific listing by primary key (listing id)
+    listing = ListingModel.objects.get(pk=listing_id)
+
+    return render(request, 'auctions/listings/listing.html', context={'listing': listing})
 
 
 @login_required(login_url='/login/')

@@ -1,0 +1,20 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    {# Display item (listing) page #}
+    <h2>{{ listing.title }}, {{ listing.condition }}</h2>
+    <p>Ends {{ listing.end_datetime }}<p>
+
+    <p><strong>Current (highest) bid:</strong></p>
+    <p>${{ listing.starting_price }}</p>
+
+    {% if listing.description %}
+        <p><strong>Description:</strong></p>
+        <p>{{ listing.description }}</p>
+    {% endif %}
+
+    <p><strong>Sellar information:</strong><p>
+    <p>{{ listing.seller }}</p>
+    <p>Contacts: <a href="mailto://{{listing.seller.email}}">{{ listing.seller.email }}</a>, <a href="tel://{{listing.sellar.phone}}">{{ listing.seller.phone }}</a>.<p>
+
+{% endblock body %}
