@@ -19,10 +19,12 @@ class UserCreationForm(forms.UserCreationForm):
 
 
 class TimeWidget(TimeInput):
+    """HTML <input type="time"> form widget."""
     input_type = 'time'
 
 
 class DateWidget(DateInput):
+    """HTML <input type="date"> form widget."""
     input_type = 'date'
 
     def __init__(self, *args, **kwargs):
@@ -42,20 +44,23 @@ class ListingForm(ModelForm):
     """
     Listing form, used for:
     1. HTML form rendering;
-    2. client-side <form> validation;
+    2. client-side <form> validation (attributes);
     3. server-side ListingForm validation;
     4. cleanded Model instance saving.
     """
     # Split model start_datetime, end_datetime into multiple fields
     start_time = TimeField(required=True, widget=TimeWidget,
-                           label=_("Listing start time"), initial=round_current_time_string())
+                           label=_("Listing start time"),
+                           initial=round_current_time_string())
     start_date = DateField(required=True, widget=DateWidget,
-                           label=_("Listing start date"), initial=current_date_string())
+                           label=_("Listing start date"),
+                           initial=current_date_string())
     end_time = TimeField(required=True, widget=TimeWidget,
                          label=_("Listing end time"))
     end_date = DateField(required=True, widget=DateWidget,
                          label=_("Listing end date"))
 
+    # self._meta options
     class Meta:
         """
         Attribute-style form customization.
