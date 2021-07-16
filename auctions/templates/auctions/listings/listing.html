@@ -10,7 +10,7 @@
     <p>Ends {{ listing.end_datetime }}</p>
 
     <p><strong>Current (highest) bid:</strong></p>
-    <p>${{ listing.starting_price }}</p>
+    <p>${{ listing.current_bid }}</p>
 
     {% if listing.description %}
         <p><strong>Description:</strong></p>
@@ -19,6 +19,14 @@
 
     <p><strong>Sellar information:</strong><p>
     <p>{{ listing.seller }}</p>
-    <p>Contacts: <a href="mailto://{{listing.seller.email}}">{{ listing.seller.email }}</a>, <a href="tel://{{listing.sellar.phone}}">{{ listing.seller.phone }}</a>.</p>
+    <p>Contacts: <a href="mailto://{{listing.seller.email}}">{{ listing.seller.email }}</a>, <a href="tel://{{listing.sellar.phone}}">{{ listing.seller.phone }}</a></p>
+
+    <p><strong>Place your bid:</strong></p>
+    <form action="{% url 'bid' listing.listing_id %}" method="POST">
+        {% csrf_token %}
+        {{ bid_form.bid }}
+        <span class="form-text text-muted">Enter ${{ listing.current_bid|add:'1' }} or more</span>
+        <input class="btn btn-primary mt-3" type="submit" value="Place bid">
+    </form>
 
 {% endblock body %}

@@ -81,8 +81,44 @@ class ListingModel(models.Model):
 
     @property
     def active(self):
+        """Return wether listing is still active."""
         cur_datetime = current_datetime()
         return cur_datetime < self.end_datetime
 
-    def price():
-        pass
+    @property
+    def current_bid(self):
+        """Return max listing bid - current bid."""
+        bids = self.bids.all()
+        if bids.exists():
+            max_bid = max(bids, key=lambda b: b.bid)
+            return max_bid
+        else:
+            return self.starting_price
+
+    @property
+    def bid_count(self):
+        """Return number of bids accosiated with this listing."""
+        return self.bids.count()
+
+
+class BidModel(models.Model):
+    """
+    Bid - suggested listing/item price tag.
+    Bid should be higher than previous bid.
+    """
+    listing = models.ForeignKey(ListingModel, on_delete=models.CASCADE,
+                                related_name='bids', verbose_name=_('Bidding listing'))
+    bidder = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                               related_name='bids', verbose_name=_('Listing bidder'))
+    bid = models.FloatField(_('Placed bid/price tag (in $)'),
+                            help_text=_('Make sure that bid is greater than current bid.'))
+
+    def __str__(self):
+        return f'{self.listing.title}, ${self.bid}'
+
+    def clean(self):
+        """Custom bid model-wide validation."""
+        if self.bidder == self.listing.seller:
+            raise ValidationError({
+                'bidder': _("Owner of the listing can not be it's bidder.")
+            })

@@ -5,8 +5,10 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
 
-from .forms import UserCreationForm, ListingForm
+from .forms import UserCreationForm, ListingForm, BidForm
 from .util_datetime import current_datetime
 from .models import ListingModel
 
@@ -99,7 +101,12 @@ def listing(request, listing_id):
     # Get specific listing by primary key (listing id)
     listing = ListingModel.objects.get(pk=listing_id)
 
-    return render(request, 'auctions/listings/listing.html', context={'listing': listing})
+    # Form for entering bid price
+    bid_form = BidForm()
+    bid_form.fields['bid'].widget.attrs['min'] = listing.starting_price + 1
+
+    return render(request, 'auctions/listings/listing.html',
+                  context={'listing': listing, 'bid_form': bid_form})
 
 
 @login_required(login_url='/login/')
@@ -142,7 +149,7 @@ def owner_required(func):
     """Check weather user is the owner of requesting listing."""
     def inner(request, listing_id):
         l = ListingModel.objects.get(pk=listing_id)
-        if l:
+        if l.exists():
             if l.seller == request.user:
                 return func(request, listing_id)
         raise Http404()
@@ -191,3 +198,38 @@ def my_listings(request):
 
     context = {'listings': listings}
     return render(request, 'auctions/listings/listings.html', context)
+
+
+@login_required
+def bid(request, listing_id):
+    """
+    User request to bid on listing (login is required).
+
+    Validate bid and updates the listing model.
+    Save bid to database.
+    """
+    # Bidding functionality
+    if request.method == 'POST':
+        l = ListingModel.objects.get(pk=listing_id)
+        # None instead of empty QueryDict
+        bid_form = BidForm(data=request.POST or None)
+        # bid_form.full_clean()
+
+        # Custom form validation
+        if int(request.POST['bid']) < l.current_bid + 1:
+            bid_form.add_error('bid', ValidationError(
+                _('Bid must be >= %(current_bid)s - current bid'),
+                params={'current_bid': l.current_bid}
+            ))
+
+        # if bid_form.is_bound and not bid_form.errors:
+        if bid_form.is_valid():
+            # Save bid instance
+            bid = bid_form.save(commit=False)
+            bid.listing = l
+            bid.bidder = request.user
+            bid.save()
+
+            return redirect(reverse('listing', args=[listing_id]))
+        else:
+            return render(request, 'auctions/listings/listing.html', {'listing': l})

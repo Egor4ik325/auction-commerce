@@ -1,8 +1,11 @@
 from django.contrib.auth import forms, get_user_model
-from django.forms import ModelForm, TimeField, DateField, TimeInput, DateInput, DateTimeInput, Textarea, HiddenInput
+from django.forms import (
+    ModelForm, modelform_factory, TimeField, DateField,
+    TimeInput, DateInput, DateTimeInput, Textarea, NumberInput, HiddenInput
+)
 from django.utils.translation import ugettext_lazy as _
 
-from .models import ListingModel
+from .models import ListingModel, BidModel
 
 from .util_datetime import current_datetime, current_date_string
 
@@ -123,3 +126,9 @@ class ListingForm(ModelForm):
             boundfield.field.widget.attrs['class'] = 'form-control'
             # Change <p class="form-text">Help text</p>
             boundfield.field.help_text = f'<small class="form-text text-muted">{boundfield.field.help_text}</small>'
+
+
+BidForm = modelform_factory(BidModel, fields=('bid',),
+                            widgets={'bid': NumberInput(
+                                attrs={'class': 'form-control',
+                                       'placeholder': 'Bid in$'})})
