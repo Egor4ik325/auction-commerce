@@ -57,6 +57,9 @@ class ListingForm(ModelForm):
                          label=_("Listing end time"))
     end_date = DateField(required=True, widget=DateWidget, label='')
 
+    # Erroneous field styling
+    error_css_class = 'is-invalid'
+
     # self._meta options
     class Meta:
         """
