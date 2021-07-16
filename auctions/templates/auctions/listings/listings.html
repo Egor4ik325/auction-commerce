@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>My Listings</h2>
+    
+    {% include 'auctions/messages.html' %}
+
+    {% for listing in listings %}
+        <h4 class="d-flex center">
+        <a href="{% url 'listing' listing.listing_id %}">{{ listing.title }}</a>
+        {% if listing.active %}
+            <span class="badge badge-primary ml-2">Active</span>
+        {% else %}
+            <span class="badge badge-secondary ml-2">Over</span>
+        {% endif %}
+        </h4>
+        <p>Price: <em>${{ listing.starting_price }}</em></p>
+        <p>Start {{ listing.start_datetime }}</p>
+        <p>End: {{ listing.end_datetime }}</p>
+        <hr>
+    {% empty %}
+        <p>No listings, <a href="">create one</a></p>
+    {% endfor %}
+
+{% endblock %}

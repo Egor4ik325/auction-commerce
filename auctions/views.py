@@ -181,3 +181,13 @@ def update_listing(request, listing_id):
     form = ListingForm(instance=l)
     return render(request, 'auctions/listings/update.html',
                   context={'listing': l, 'form': form})
+
+
+@login_required
+def my_listings(request):
+    """Return listings of the requesting user."""
+    # Get user listings
+    listings = ListingModel.objects.filter(seller=request.user)
+
+    context = {'listings': listings}
+    return render(request, 'auctions/listings/listings.html', context)

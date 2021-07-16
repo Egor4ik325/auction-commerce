@@ -43,8 +43,8 @@ class ListingModel(models.Model):
 
     class Condition(models.TextChoices):
         NEW = 'NEW', 'New'
-        RENTAL = 'RENTAL', 'Rental'
         USED = 'USED', 'Used'
+        RENTAL = 'RENTAL', 'Rental'
         USED_GOOD = 'USED_GOOD', 'Used - Good'
         USED_VERYGOOD = 'USED_VERYGOOD', 'Used - Very Good'
 
@@ -78,6 +78,11 @@ class ListingModel(models.Model):
         """Determine weather listing is started or not."""
         cur_datetime = current_datetime()
         return cur_datetime > self.start_datetime
+
+    @property
+    def active(self):
+        cur_datetime = current_datetime()
+        return cur_datetime < self.end_datetime
 
     def price():
         pass

@@ -52,12 +52,10 @@ class ListingForm(ModelForm):
     # Split model start_datetime, end_datetime into multiple fields
     start_time = TimeField(required=True, widget=TimeWidget,
                            label=_("Listing start time"))
-    start_date = DateField(required=True, widget=DateWidget,
-                           label=_("Listing start date"))
+    start_date = DateField(required=True, widget=DateWidget, label='')
     end_time = TimeField(required=True, widget=TimeWidget,
                          label=_("Listing end time"))
-    end_date = DateField(required=True, widget=DateWidget,
-                         label=_("Listing end date"))
+    end_date = DateField(required=True, widget=DateWidget, label='')
 
     # self._meta options
     class Meta:
@@ -82,34 +80,36 @@ class ListingForm(ModelForm):
         Statement-style form customization.
         """
         # Modify init arguments (modify fields via __init__)
-        if kwargs:
-            # POST request: data + [instance] - modify
-            if kwargs.get('data'):
-                # Merge date and time fields from data
-                kwargs['data']._mutable = True
-                kwargs['data']['start_datetime'] = f"{kwargs['data']['start_date']} {kwargs['data']['start_time']}"
-                kwargs['data']['end_datetime'] = f"{kwargs['data']['end_date']} {kwargs['data']['end_time']}"
-                kwargs['data']._mutable = False
-            # GET request: [instance] - create based-on model
-            elif kwargs.get('instance'):
-                if not kwargs.get('initial'):
-                    kwargs['initial'] = {}
-                # Split datetime fields from instance (initials from instance)
-                kwargs['initial']['start_date'] = kwargs['instance'].start_datetime.strftime(
-                    '%Y-%m-%d')
-                kwargs['initial']['start_time'] = kwargs['instance'].start_datetime.strftime(
-                    '%H:%M')
-                kwargs['initial']['end_date'] = kwargs['instance'].end_datetime.strftime(
-                    '%Y-%m-%d')
-                kwargs['initial']['end_time'] = kwargs['instance'].end_datetime.strftime(
-                    '%H:%M')
-            # GET request: create new
-            else:
-                if not kwargs.get('initial'):
-                    kwargs['initial'] = {}
-                # Form fill initials
-                kwargs['initial']['start_time'] = round_current_time_string()
-                kwargs['initial']['start_date'] = current_date_string()
+        if kwargs is None:
+            kwargs = {}
+        # POST request: data + [instance] - modify
+        if kwargs.get('data'):
+            # Merge date and time fields from data
+            kwargs['data']._mutable = True
+            kwargs['data']['start_datetime'] = f"{kwargs['data']['start_date']} {kwargs['data']['start_time']}"
+            kwargs['data']['end_datetime'] = f"{kwargs['data']['end_date']} {kwargs['data']['end_time']}"
+            kwargs['data']._mutable = False
+        # GET request: [instance] - create based-on model
+        elif kwargs.get('instance'):
+            if not kwargs.get('initial'):
+                kwargs['initial'] = {}
+            # Split datetime fields from instance (initials from instance)
+            kwargs['initial']['start_date'] = kwargs['instance'].start_datetime.strftime(
+                '%Y-%m-%d')
+            kwargs['initial']['start_time'] = kwargs['instance'].start_datetime.strftime(
+                '%H:%M')
+            kwargs['initial']['end_date'] = kwargs['instance'].end_datetime.strftime(
+                '%Y-%m-%d')
+            kwargs['initial']['end_time'] = kwargs['instance'].end_datetime.strftime(
+                '%H:%M')
+        # GET request: create new
+        else:
+            if not kwargs.get('initial'):
+                kwargs['initial'] = {}
+            # Form fill initials
+            kwargs['initial']['start_time'] = round_current_time_string()
+            kwargs['initial']['start_date'] = current_date_string()
+            kwargs['initial']['end_time'] = round_current_time_string()
 
         # Pass all arguments to the parent class
         super(ModelForm, self).__init__(*args, **kwargs)
