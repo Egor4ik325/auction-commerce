@@ -156,6 +156,28 @@ def delete_listing(request, listing_id):
     return redirect(reverse('index'))
 
 
+@owner_required
 def update_listing(request, listing_id):
     """Return form to edit created listing."""
-    pass
+    # Requesting listing
+    l = ListingModel.objects.get(pk=listing_id)
+
+    if request.method == 'POST':
+        # Modify instance with new request data
+        form = ListingForm(data=request.POST, instance=l)
+
+        # Validate new data
+        form.full_clean()
+        if form.is_valid():
+            # Commit changes to the instance
+            form.save(commit=True)
+            return redirect(reverse('index'))
+        else:
+            # Send errounius form with populated data
+            return render(request, 'auctions/listings/update.html',
+                          context={'listing': l, 'form': form})
+
+    # Make bound (instance) form
+    form = ListingForm(instance=l)
+    return render(request, 'auctions/listings/update.html',
+                  context={'listing': l, 'form': form})

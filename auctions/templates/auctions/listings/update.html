@@ -1,0 +1,41 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    {# Render errors (field and non-field) #}
+    {% if form.errors %}
+        {# Field-related errors #}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger my-3">
+                    {{ field.name }}: {{ error }}
+                </div>
+            {% endfor %} 
+        {% endfor %}
+        {# Non-field (form.clean) related errors #}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger my-3">
+                Form: {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'update_listing' listing.listing_id %}" method="POST">
+        {# Custom render form #}
+        {% csrf_token %}
+        {# Fields with <input type="hidden"> #}
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+        {# Display visible fields #}
+        {% for field in form.visible_fields %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }} {# <input> + field.data #}
+                {% if field.help_text %}
+                    {{ field.help_text|safe }}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <input class="form-control" type="submit" value="Save">
+    </form>
+{% endblock body %}

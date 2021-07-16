@@ -1,6 +1,7 @@
 from django.contrib.auth import forms, get_user_model
 from django.forms import ModelForm, TimeField, DateField, TimeInput, DateInput, DateTimeInput, Textarea, HiddenInput
 from django.utils.translation import ugettext_lazy as _
+
 from .models import ListingModel
 
 from .util_datetime import current_datetime, current_date_string
@@ -50,11 +51,9 @@ class ListingForm(ModelForm):
     """
     # Split model start_datetime, end_datetime into multiple fields
     start_time = TimeField(required=True, widget=TimeWidget,
-                           label=_("Listing start time"),
-                           initial=round_current_time_string())
+                           label=_("Listing start time"))
     start_date = DateField(required=True, widget=DateWidget,
-                           label=_("Listing start date"),
-                           initial=current_date_string())
+                           label=_("Listing start date"))
     end_time = TimeField(required=True, widget=TimeWidget,
                          label=_("Listing end time"))
     end_date = DateField(required=True, widget=DateWidget,
@@ -74,7 +73,7 @@ class ListingForm(ModelForm):
             attrs={'cols': 80, 'rows': 10, 'class': 'form-control'}),
             # Make fields passed to model instance
             'start_datetime': HiddenInput, 'end_datetime': HiddenInput}
-        # field help_text is not HTML escaped in autoform
+        # help_text is not escaped
         help_texts = {
             "description": 'Description of item at auction'}
 
@@ -84,22 +83,40 @@ class ListingForm(ModelForm):
         """
         # Modify init arguments (modify fields via __init__)
         if kwargs:
-            # Assign date and time to model datetime field
-            if kwargs['data']:
+            # POST request: data + [instance] - modify
+            if kwargs.get('data'):
+                # Merge date and time fields from data
                 kwargs['data']._mutable = True
-                # Modify django.http.request.QueryDict argument or self.data directly
                 kwargs['data']['start_datetime'] = f"{kwargs['data']['start_date']} {kwargs['data']['start_time']}"
                 kwargs['data']['end_datetime'] = f"{kwargs['data']['end_date']} {kwargs['data']['end_time']}"
                 kwargs['data']._mutable = False
+            # GET request: [instance] - create based-on model
+            elif kwargs.get('instance'):
+                if not kwargs.get('initial'):
+                    kwargs['initial'] = {}
+                # Split datetime fields from instance (initials from instance)
+                kwargs['initial']['start_date'] = kwargs['instance'].start_datetime.strftime(
+                    '%Y-%m-%d')
+                kwargs['initial']['start_time'] = kwargs['instance'].start_datetime.strftime(
+                    '%H:%M')
+                kwargs['initial']['end_date'] = kwargs['instance'].end_datetime.strftime(
+                    '%Y-%m-%d')
+                kwargs['initial']['end_time'] = kwargs['instance'].end_datetime.strftime(
+                    '%H:%M')
+            # GET request: create new
+            else:
+                if not kwargs.get('initial'):
+                    kwargs['initial'] = {}
+                # Form fill initials
+                kwargs['initial']['start_time'] = round_current_time_string()
+                kwargs['initial']['start_date'] = current_date_string()
 
-        # Pass all got arguments to the parent class
+        # Pass all arguments to the parent class
         super(ModelForm, self).__init__(*args, **kwargs)
 
         # Post-init (modify fields directly):
-        # TODO: move form layout to the template
-        # Rendering customization (only visible fields)
         for boundfield in self.visible_fields():
-            # Change class atribute of widget of fields
+            # Change <input class="form-control">
             boundfield.field.widget.attrs['class'] = 'form-control'
-            # Format help_text for HTML form
+            # Change <p class="form-text">Help text</p>
             boundfield.field.help_text = f'<small class="form-text text-muted">{boundfield.field.help_text}</small>'
