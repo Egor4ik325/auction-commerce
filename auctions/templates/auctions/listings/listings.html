@@ -19,7 +19,7 @@
         <p>End: {{ listing.end_datetime }}</p>
         <hr>
     {% empty %}
-        <p>No listings, <a href="">create one</a></p>
+        <p>No listings, <a href="{% url 'add_listing' %}">create one</a></p>
     {% endfor %}
 
 {% endblock %}

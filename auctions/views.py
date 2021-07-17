@@ -211,9 +211,13 @@ def bid(request, listing_id):
     # Bidding functionality
     if request.method == 'POST':
         l = ListingModel.objects.get(pk=listing_id)
-        # None instead of empty QueryDict
+        # Check weather this listing really exists
+        if l is None:
+            raise Http404()
+
+        # None instead of empty QueryDict()
         bid_form = BidForm(data=request.POST or None)
-        # bid_form.full_clean()
+        bid_form.full_clean()
 
         # Custom form validation
         if int(request.POST['bid']) < l.current_bid + 1:
@@ -222,14 +226,27 @@ def bid(request, listing_id):
                 params={'current_bid': l.current_bid}
             ))
 
-        # if bid_form.is_bound and not bid_form.errors:
-        if bid_form.is_valid():
+        if not bid_form.errors and bid_form.is_bound:
             # Save bid instance
             bid = bid_form.save(commit=False)
             bid.listing = l
             bid.bidder = request.user
-            bid.save()
+            # Validate new fields (excluded from form initialy)
+            try:
+                # Validate fields, form and field uniqueness
+                bid.full_clean()  # or: bid.clean()
+            except ValidationError as e:
+                messages.error(request, e.messages[0])
+            else:
+                bid.save()
 
+            # redirect to ./listings/<listing_id>
             return redirect(reverse('listing', args=[listing_id]))
         else:
-            return render(request, 'auctions/listings/listing.html', {'listing': l})
+            # Send error messages throught Django messages framework
+            for error in bid_form.fields['bid'].errors:
+                messages.error(request, f'bid: {error}')
+            for error in bid_form.non_field_errors():
+                message.error(request, str(error))
+
+            return redirect(reverse(listing, args=[listing_id]))

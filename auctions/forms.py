@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from .models import ListingModel, BidModel
 
 from .util_datetime import current_datetime, current_date_string
+from datetime import timedelta
 
 
 class UserCreationForm(forms.UserCreationForm):
@@ -40,6 +41,7 @@ class DateWidget(DateInput):
 def round_current_time_string():
     """Custom hour rounding time str formatting."""
     cur_dt = current_datetime()
+    cur_dt += timedelta(hours=1)
     cur_time = cur_dt.strftime('%H:00')
     return cur_time
 
@@ -131,4 +133,4 @@ class ListingForm(ModelForm):
 BidForm = modelform_factory(BidModel, fields=('bid',),
                             widgets={'bid': NumberInput(
                                 attrs={'class': 'form-control',
-                                       'placeholder': 'Bid in$'})})
+                                       'placeholder': 'Bid in $'})})

@@ -87,13 +87,22 @@ class ListingModel(models.Model):
 
     @property
     def current_bid(self):
-        """Return max listing bid - current bid."""
+        """Return PRICE value of max listing bid - current bid."""
         bids = self.bids.all()
         if bids.exists():
             max_bid = max(bids, key=lambda b: b.bid)
-            return max_bid
+            return max_bid.bid
         else:
             return self.starting_price
+
+    @property
+    def bid(self):
+        """Same as self.current_bid but retuns actual BidModel instance."""
+        bids = self.bids.all()
+        if bids.exists():
+            return max(bids, key=lambda b: b.bid)
+        else:
+            return None
 
     @property
     def bid_count(self):
@@ -114,11 +123,12 @@ class BidModel(models.Model):
                             help_text=_('Make sure that bid is greater than current bid.'))
 
     def __str__(self):
-        return f'{self.listing.title}, ${self.bid}'
+        return f'${self.bid}'
 
     def clean(self):
         """Custom bid model-wide validation."""
-        if self.bidder == self.listing.seller:
-            raise ValidationError({
-                'bidder': _("Owner of the listing can not be it's bidder.")
-            })
+        # Skip validation if fields aren't available at form._post_clean -> model.clean()
+        if hasattr(self, 'bidder') and hasattr(self, 'listing'):
+            if self.bidder == self.listing.seller:
+                raise ValidationError(
+                    _("Listing owner can not be it's bidder."))
