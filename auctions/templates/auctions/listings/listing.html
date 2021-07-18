@@ -39,4 +39,20 @@
         </form>
     {% endif %}
 
+    <p class="my-3"><strong>Comments:</strong><p>
+
+    {# Render user comments #}
+    {% for comment in comments %}
+        <p><b>{{ comment.user }}</b> posted on {{ comment.post_datetime }}<p>
+        {{ comment }}
+        <hr>
+    {% endfor %}
+    
+    {# Render comment form #}
+    <form action="{% url 'comment' listing.listing_id %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.comment }}
+        <input class="btn btn-primary mt-3" type="submit" value="Post comment">
+    </form>
+
 {% endblock body %}

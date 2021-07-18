@@ -8,9 +8,9 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from .forms import UserCreationForm, ListingForm, BidForm
+from .forms import UserCreationForm, ListingForm, BidForm, CommentForm
 from .util_datetime import current_datetime
-from .models import ListingModel
+from .models import ListingModel, CommentModel
 
 UserModel = get_user_model()
 
@@ -101,8 +101,8 @@ def listing(request, listing_id):
     """Render full listing webpage (render listing model)."""
     # Get specific listing by primary key (listing id)
     l = ListingModel.objects.get(pk=listing_id)
-
     context = {'listing': l}
+
     if l.active:
         # Form for entering bid price
         bid_form = BidForm()
@@ -115,6 +115,13 @@ def listing(request, listing_id):
     else:
         messages.warning(request, "This  is not biddable.")
 
+    # Form for commenting
+    comment_form = CommentForm()
+    comment_form.fields['comment'].widget.attrs['class'] = 'form-control'
+    context['comment_form'] = comment_form
+    # Listing comments
+    comments = l.comments.all()
+    context['comments'] = comments
     return render(request, 'auctions/listings/listing.html', context)
 
 
@@ -287,4 +294,22 @@ def bid(request, listing_id):
             for error in bid_form.non_field_errors():
                 message.error(request, str(error))
 
+            return redirect(reverse(listing, args=[listing_id]))
+
+
+@login_required
+def comment(request, listing_id):
+    if request.method == 'POST':
+        l = get_object_or_404(ListingModel, pk=listing_id)
+
+        comment_form = CommentForm(data=request.POST or None)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.listing = l
+            comment.user = request.user
+            comment.save()
+            return redirect(reverse('listing', args=[listing_id]))
+        else:
+            for field, error in comment_form.errors:
+                message.error(request, str(error))
             return redirect(reverse(listing, args=[listing_id]))

@@ -21,4 +21,6 @@ urlpatterns = [
     path("listings/", views.my_listings, name="my_listings"),
     # Bid
     path('bid/<int:listing_id>', views.bid, name="bid"),
+    # To comment
+    path('comment/<int:listing_id>', views.comment, name="comment"),
 ]

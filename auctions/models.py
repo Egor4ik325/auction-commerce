@@ -144,3 +144,23 @@ class BidModel(models.Model):
             if self.bidder == self.listing.seller:
                 raise ValidationError(
                     _("Listing owner can not be it's bidder."))
+
+
+class CommentModel(models.Model):
+    listing = models.ForeignKey(ListingModel, on_delete=models.CASCADE,
+                                related_name='comments',
+                                verbose_name=_("Listing commented"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                             related_name='comments',
+                             verbose_name=_("User commented"))
+    comment = models.TextField(_("Comment text"))
+
+    post_datetime = models.DateTimeField(
+        _("Comment post date"), auto_now=False, auto_now_add=True)
+
+    last_modified_datetime = models.DateTimeField(
+        _("Date and time of last modification to the comment"), auto_now=True, auto_now_add=False)
+
+    def __str__(self):
+        """Render comment in template."""
+        return self.comment

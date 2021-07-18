@@ -5,7 +5,7 @@ from django.forms import (
 )
 from django.utils.translation import ugettext_lazy as _
 
-from .models import ListingModel, BidModel
+from .models import ListingModel, BidModel, CommentModel
 
 from .util_datetime import current_datetime, current_date_string
 from datetime import timedelta
@@ -134,3 +134,5 @@ BidForm = modelform_factory(BidModel, fields=('bid',),
                             widgets={'bid': NumberInput(
                                 attrs={'class': 'form-control',
                                        'placeholder': 'Bid in $'})})
+
+CommentForm = modelform_factory(CommentModel, fields=['comment'])
