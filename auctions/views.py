@@ -100,14 +100,22 @@ def register(request):
 def listing(request, listing_id):
     """Render full listing webpage (render listing model)."""
     # Get specific listing by primary key (listing id)
-    listing = ListingModel.objects.get(pk=listing_id)
+    l = ListingModel.objects.get(pk=listing_id)
 
-    # Form for entering bid price
-    bid_form = BidForm()
-    bid_form.fields['bid'].widget.attrs['min'] = listing.starting_price + 1
+    context = {'listing': l}
+    if l.active:
+        # Form for entering bid price
+        bid_form = BidForm()
+        bid_form.fields['bid'].widget.attrs['min'] = l.starting_price + 1
+        context['bid_form'] = bid_form
+    elif l.bid is not None:
+        if l.bid.bidder == request.user:
+            messages.success(
+                request, f"Congradulations. You won this listing by ${l.current_bid}!")
+    else:
+        messages.warning(request, "This  is not biddable.")
 
-    return render(request, 'auctions/listings/listing.html',
-                  context={'listing': listing, 'bid_form': bid_form})
+    return render(request, 'auctions/listings/listing.html', context)
 
 
 @login_required(login_url='/login/')

@@ -29,12 +29,14 @@
     <p><u>{{ listing.seller|capfirst }}</u> contacts:<br>
     <a href="mailto://{{listing.seller.email}}">{{ listing.seller.email }}</a>, <a href="tel://{{listing.sellar.phone}}">{{ listing.seller.phone }}</a></p>
 
-    <p><strong>Place your bid:</strong></p>
-    <form action="{% url 'bid' listing.listing_id %}" method="POST">
-        {% csrf_token %}
-        {{ bid_form.bid }}
-        <span class="form-text text-muted">Enter ${{ listing.current_bid|add:'1' }} or more</span>
-        <input class="btn btn-primary mt-3" type="submit" value="Place bid">
-    </form>
+    {% if listing.active%}
+        <p><strong>Place your bid:</strong></p>
+        <form action="{% url 'bid' listing.listing_id %}" method="POST">
+            {% csrf_token %}
+            {{ bid_form.bid }}
+            <span class="form-text text-muted">Enter ${{ listing.current_bid|add:'1' }} or more</span>
+            <input class="btn btn-primary mt-3" type="submit" value="Place bid">
+        </form>
+    {% endif %}
 
 {% endblock body %}
