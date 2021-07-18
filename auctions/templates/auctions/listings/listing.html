@@ -14,11 +14,14 @@
     <a href="{% url 'delete_listing' listing.listing_id %}">delete</a> •
     <a href="{% url 'update_listing' listing.listing_id %}">update</a>
     </p>
+
+    <img class="img-fluid d-block mx-auto my-3" style="max-width: 100%" src="{{ listing.photo_url }}">
+
     <p><b>Time left:</b></p>
     <p>{{ listing.end_datetime|timeuntil }}</p>
 
     <p><strong>Current (highest) bid:</strong></p>
-    <p><em>${{ listing.current_bid }}</em> &ensp; [{{ listing.bid_count }} bid(s) so far]</p>
+    <p><em class="display-4">${{ listing.current_bid }}</em> &ensp; [{{ listing.bid_count }} bid(s) so far]</p>
 
     {% if listing.description %}
         <p><strong>Description:</strong></p>
@@ -26,8 +29,11 @@
     {% endif %}
 
     <p><strong>Sellar information:</strong><p>
-    <p><u>{{ listing.seller|capfirst }}</u> contacts:<br>
-    <a href="mailto://{{listing.seller.email}}">{{ listing.seller.email }}</a>, <a href="tel://{{listing.sellar.phone}}">{{ listing.seller.phone }}</a></p>
+    <ul>
+        <li>Account: {{ listing.seller|capfirst }}</li>
+        <li>Email: <a href="mailto://{{listing.seller.email}}">{{ listing.seller.email }}</a></li>
+        <li>Phone: <a href="tel://{{listing.sellar.phone}}">{{ listing.seller.phone }}</a></li>
+    </ul>
 
     {% if listing.active%}
         <p><strong>Place your bid:</strong></p>
@@ -46,6 +52,8 @@
         <p><b>{{ comment.user }}</b> posted on {{ comment.post_datetime }}<p>
         {{ comment }}
         <hr>
+    {% empty %}
+        <i>You will be first!</i>
     {% endfor %}
     
     {# Render comment form #}

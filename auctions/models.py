@@ -68,6 +68,9 @@ class ListingModel(models.Model):
     closed = models.BooleanField(
         _("Listing before endtime closed"), default=False)
 
+    photo_url = models.URLField(
+        _("Internet photo URL for listing"), max_length=200, default="https://www.freeiconspng.com/uploads/no-image-icon-32.png")
+
     def clean(self):
         """Custom model validation. clean() = pass in BaseModel."""
         if self.start_datetime > self.end_datetime:

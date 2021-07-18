@@ -6,17 +6,28 @@
     {% include 'auctions/messages.html' %}
 
     {% for listing in listings %}
-        <h4><a href="{% url 'listing' listing.listing_id %}">{{ listing.title }}</a></h4>
-        <p>Price: <em>${{ listing.starting_price }}</em></p>
-        {% if listing.is_started %}
-            Started:
-        {% else %}
-            Starts:
-        {% endif %}
-        {{ listing.start_datetime }}
-        </p>
-        <p>Ends: {{ listing.end_datetime }}</p>
+
+        <div class="f-flex">
+            <div>
+                {# Render image #}
+                <img src="{{ listing.photo_url }}" alt="Listing photo" height="150" class="float-left mr-4" >
+            </div>
+            <div class="flex-wrap">
+                <h4><a href="{% url 'listing' listing.listing_id %}">{{ listing.title }}</a></h4>
+                <p>Price: <em>${{ listing.starting_price }}</em></p>
+                <p>
+                {% if listing.is_started %}
+                    Started:
+                {% else %}
+                    Starts:
+                {% endif %}
+                {{ listing.start_datetime }}
+                </p>
+                <p>Ends: {{ listing.end_datetime }}</p>
+            </div>
+        </div>
         <hr>
+
     {% empty %}
         <p>No active listings</p>
     {% endfor %}

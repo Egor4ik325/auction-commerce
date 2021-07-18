@@ -73,7 +73,7 @@ class ListingForm(ModelForm):
         """
         model = ListingModel
         # Editable form fields
-        fields = ["title", "condition", "starting_price",
+        fields = ["title", "condition", "starting_price", "photo_url",
                   "start_time", "start_date", "end_time", "end_date", "description", "start_datetime", "end_datetime"]
         widgets = {"description": Textarea(
             attrs={'cols': 80, 'rows': 10, 'class': 'form-control'}),
