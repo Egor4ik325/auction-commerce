@@ -1,9 +1,16 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
+    {% include 'auctions/messages.html' %}
+
     {# Display item (listing) page #}
-    <h2>{{ listing.title }}, {{ listing.condition }}</h2>
+    <h2 class="d-flex center mb-3">{{ listing.title }}, {{ listing.condition }}
+    {% if not listing.active %}
+        <small><span class="badge badge-danger ml-2">Closed</span></small>
+    {% endif %}
+    </h2>
     <p>
+    <a href="{% url 'close_listing' listing.listing_id %}">close</a> •
     <a href="{% url 'delete_listing' listing.listing_id %}">delete</a> •
     <a href="{% url 'update_listing' listing.listing_id %}">update</a>
     </p>
@@ -11,7 +18,7 @@
     <p>{{ listing.end_datetime|timeuntil }}</p>
 
     <p><strong>Current (highest) bid:</strong></p>
-    <p><em>{{ listing.bid }}</em> &ensp; [{{ listing.bid_count }} bid(s) so far]</p>
+    <p><em>${{ listing.current_bid }}</em> &ensp; [{{ listing.bid_count }} bid(s) so far]</p>
 
     {% if listing.description %}
         <p><strong>Description:</strong></p>
@@ -23,8 +30,6 @@
     <a href="mailto://{{listing.seller.email}}">{{ listing.seller.email }}</a>, <a href="tel://{{listing.sellar.phone}}">{{ listing.seller.phone }}</a></p>
 
     <p><strong>Place your bid:</strong></p>
-    {% include 'auctions/messages.html' %}
-
     <form action="{% url 'bid' listing.listing_id %}" method="POST">
         {% csrf_token %}
         {{ bid_form.bid }}

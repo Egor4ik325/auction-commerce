@@ -64,6 +64,10 @@ class ListingModel(models.Model):
         validators=[MinValueValidator(current_datetime())]
     )
 
+    # User-defined listing active status
+    closed = models.BooleanField(
+        _("Listing before endtime closed"), default=False)
+
     def clean(self):
         """Custom model validation. clean() = pass in BaseModel."""
         if self.start_datetime > self.end_datetime:
@@ -79,11 +83,19 @@ class ListingModel(models.Model):
         cur_datetime = current_datetime()
         return cur_datetime > self.start_datetime
 
+    # Listing statuses:
+    # - starts (cur time before start)
+    # - active (cur time between start/end)
+    # - over (cur time after end)
+    # - closed (_active = False)
+
     @property
     def active(self):
         """Return wether listing is still active."""
         cur_datetime = current_datetime()
-        return cur_datetime < self.end_datetime
+        now = self.start_datetime < cur_datetime < self.end_datetime
+        not_closed = not self.closed
+        return now and not_closed
 
     @property
     def current_bid(self):

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -23,7 +23,8 @@ def index(request):
     for user in users:
         cur_datetime = current_datetime()
         # Query all active listings (instance.RelatedManager.QuerySet)
-        listings.extend(user.listings.filter(end_datetime__gt=cur_datetime))
+        listings.extend(user.listings.filter(
+            end_datetime__gt=cur_datetime, start_datetime__lt=cur_datetime, closed=False))
 
     context = {'listings': listings}
     return render(request, "auctions/index.html", context)
@@ -148,14 +149,13 @@ def add_listing(request):
 def owner_required(func):
     """Check weather user is the owner of requesting listing."""
     def inner(request, listing_id):
-        l = ListingModel.objects.get(pk=listing_id)
-        if l.exists():
-            if l.seller == request.user:
-                return func(request, listing_id)
-        raise Http404()
+        l = get_object_or_404(ListingModel, pk=listing_id)
+        if l.seller == request.user:
+            return func(request, listing_id)
     return inner
 
 
+@login_required
 @owner_required
 def delete_listing(request, listing_id):
     """Delete listing with id=listing_id."""
@@ -163,6 +163,7 @@ def delete_listing(request, listing_id):
     return redirect(reverse('index'))
 
 
+@login_required
 @owner_required
 def update_listing(request, listing_id):
     """Return form to edit created listing."""
@@ -191,6 +192,28 @@ def update_listing(request, listing_id):
 
 
 @login_required
+@owner_required
+def close_listing(request, listing_id):
+    """
+    Close currently active listing (switch closed flag).
+
+    Validate:
+    1. user is loged-in and owner
+    2. listing exists
+    3. listing is not closed
+    """
+    # Request validation
+    l = get_object_or_404(ListingModel, pk=listing_id)
+    if not l.active:
+        messages.info(request, "Listing is already closed")
+    else:
+        l.closed = True
+        l.save()
+        messages.info(request, "Closed the listing")
+    return redirect(reverse(listing, args=[listing_id]))
+
+
+@login_required
 def my_listings(request):
     """Return listings of the requesting user."""
     # Get user listings
@@ -205,8 +228,10 @@ def bid(request, listing_id):
     """
     User request to bid on listing (login is required).
 
-    Validate bid and updates the listing model.
-    Save bid to database.
+    Validate:
+    1. Validate user (loged in, not owner)  - Http404
+    2. Validate listing existence           - Http404
+    3. Validate listing activity            - error message
     """
     # Bidding functionality
     if request.method == 'POST':
@@ -214,6 +239,10 @@ def bid(request, listing_id):
         # Check weather this listing really exists
         if l is None:
             raise Http404()
+
+        if not l.active:
+            messages.error(request, "Listing is not active to bid.")
+            return redirect(reverse('listing', args=[listing_id]))
 
         # None instead of empty QueryDict()
         bid_form = BidForm(data=request.POST or None)
@@ -239,6 +268,7 @@ def bid(request, listing_id):
                 messages.error(request, e.messages[0])
             else:
                 bid.save()
+                messages.info(request, f"Bid {bid}")
 
             # redirect to ./listings/<listing_id>
             return redirect(reverse('listing', args=[listing_id]))
