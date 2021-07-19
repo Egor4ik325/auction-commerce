@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watchlist</h2>
+    
+    {% include 'auctions/messages.html' %}
+
+    {% for listing in watchlist_listings %}
+        <h4 class="d-flex center">
+        <a href="{% url 'listing' listing.listing_id %}">{{ listing.title }}</a>
+        {% if listing.active %}
+            <span class="badge badge-primary ml-2">Active</span>
+        {% else %}
+            <span class="badge badge-secondary ml-2">Not active</span>
+        {% endif %}
+        </h4>
+        <p>Price: <em>${{ listing.starting_price }}</em></p>
+        <p>Start {{ listing.start_datetime }}</p>
+        <p>End: {{ listing.end_datetime }}</p>
+        <hr>
+    {% empty %}
+        <p>No listings, click watch on the listing page</p>
+    {% endfor %}
+
+{% endblock %}

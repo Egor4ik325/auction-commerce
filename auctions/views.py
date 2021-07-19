@@ -122,6 +122,9 @@ def listing(request, listing_id):
     # Listing comments
     comments = l.comments.all()
     context['comments'] = comments
+    # Watchlist status
+    is_watcher = l.watchers.filter(pk=request.user.id).exists()
+    context['is_watcher'] = is_watcher
     return render(request, 'auctions/listings/listing.html', context)
 
 
@@ -313,3 +316,26 @@ def comment(request, listing_id):
             for field, error in comment_form.errors:
                 message.error(request, str(error))
             return redirect(reverse(listing, args=[listing_id]))
+
+
+@login_required
+def watch(request, listing_id):
+    """Switch state of watchlist for passed listing."""
+    l = get_object_or_404(ListingModel, pk=listing_id)
+
+    # If listing is watchlisted already
+    if request.user.watchlist.filter(pk=listing_id).exists():
+        request.user.watchlist.remove(l)
+    # Listing is new
+    else:
+        request.user.watchlist.add(l)
+
+    return redirect(reverse('listing', args=[listing_id]))
+
+
+@login_required
+def watchlist(request):
+    """Returns all watchlisted user listings."""
+    watchlist_listings = request.user.watchlist.all()
+    return render(request, 'auctions/watchlist.html',
+                  {'watchlist_listings': watchlist_listings})

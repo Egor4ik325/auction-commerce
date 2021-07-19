@@ -11,6 +11,7 @@ from .util_datetime import current_datetime
 # Models = database schema
 # blank | null | default | unique | primary_key
 # verbose_name | help_text | editable
+# cascade | protect | set null
 
 
 class User(AbstractUser):
@@ -19,6 +20,11 @@ class User(AbstractUser):
     with custom database schema (fields) and user creation/authentication form.
     """
     phone = PhoneNumberField(null=True, unique=True)
+
+    # User-Listing watchlisted listings (M:M)
+    # ManyToManyField = RelatedManager = QuerySet of ListingModel
+    watchlist = models.ManyToManyField("auctions.ListingModel", verbose_name=_(
+        "Watchlisted listings"), related_name="watchers")
 
 
 class ListingModel(models.Model):
