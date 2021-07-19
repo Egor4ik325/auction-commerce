@@ -19,6 +19,11 @@ urlpatterns = [
     path("listings/close/<int:listing_id>/",
          views.close_listing, name="close_listing"),
     path("listings/", views.my_listings, name="my_listings"),
+    # Listing categories index page
+    path("listings/categories/", views.listing_categories,
+         name="listing_categories"),
+    path("listings/categories/<int:category>/",
+         views.listing_category, name="listing_category"),
     # Bid listing
     path('bid/<int:listing_id>/', views.bid, name="bid"),
     # Comment listing

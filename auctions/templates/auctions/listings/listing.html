@@ -4,7 +4,7 @@
     {% include 'auctions/messages.html' %}
 
     {# Display item (listing) page #}
-    <h2 class="d-flex center mb-3">{{ listing.title }}, {{ listing.condition }}
+    <h2 class="d-flex center mb-3">{{ listing.title }} – {{ listing.get_condition_display }}
     {% if not listing.active %}
         <small><span class="badge badge-danger ml-2">Closed</span></small>
     {% endif %}
@@ -18,7 +18,7 @@
     <img class="img-fluid d-block mx-auto my-3" style="max-width: 100%" src="{{ listing.photo_url }}">
 
     <p><b>Time left:</b></p>
-    <p>{{ listing.end_datetime|timeuntil }}</p>
+    <p><mark>{{ listing.end_datetime|timeuntil }}</mark></p>
 
     <p><strong>Current (highest) bid:</strong></p>
     <p><em class="display-4">${{ listing.current_bid }}</em> &ensp; [{{ listing.bid_count }} bid(s) so far]</p>

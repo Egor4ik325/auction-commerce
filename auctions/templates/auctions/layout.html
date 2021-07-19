@@ -39,6 +39,9 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'listing_categories' %}">Categories</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{% url 'add_listing' %}">Create listing</a>
                 </li>
                 {% if user.is_authenticated %}

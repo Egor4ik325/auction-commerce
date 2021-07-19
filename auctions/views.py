@@ -23,6 +23,7 @@ def index(request):
     for user in users:
         cur_datetime = current_datetime()
         # Query all active listings (instance.RelatedManager.QuerySet)
+        # or: ListingModel.objects.all()
         listings.extend(user.listings.filter(
             end_datetime__gt=cur_datetime, start_datetime__lt=cur_datetime, closed=False))
 
@@ -339,3 +340,22 @@ def watchlist(request):
     watchlist_listings = request.user.watchlist.all()
     return render(request, 'auctions/watchlist.html',
                   {'watchlist_listings': watchlist_listings})
+
+
+def listing_categories(request):
+    """Render all categories as links to filter by them."""
+    categories = ListingModel.Category.choices
+    return render(request, 'auctions/listings/categories.html',
+                  {'categories': categories})
+
+
+def listing_category(request, category):
+    """Display all listing with category."""
+    if category not in ListingModel.Category.values:
+        raise Http404()
+
+    listings = ListingModel.objects.filter(category=category)
+    category_label = dict(ListingModel.Category.choices)[category]
+
+    return render(request, 'auctions/listings/category.html',
+                  {'listings': listings, 'category_label': category_label})

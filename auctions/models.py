@@ -3,7 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _  # ugettext_lazy not working
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .util_datetime import current_datetime
@@ -47,13 +47,16 @@ class ListingModel(models.Model):
         help_text=_("Description of the selling item")
     )
 
+    # Django enumeration type
     class Condition(models.TextChoices):
-        NEW = 'NEW', 'New'
-        USED = 'USED', 'Used'
-        RENTAL = 'RENTAL', 'Rental'
-        USED_GOOD = 'USED_GOOD', 'Used - Good'
-        USED_VERYGOOD = 'USED_VERYGOOD', 'Used - Very Good'
+        # CONSTANT = (value, label)
+        NEW = 'NEW', _('New')
+        USED = 'USED', _('Used')
+        RENTAL = 'RENTAL', _('Rental')
+        USED_GOOD = 'USED_GOOD', _('Used - Good')
+        USED_VERYGOOD = 'USED_VERYGOOD', _('Used - Very Good')
 
+    # Retrieve human-readable name: instance.get_condition_display()
     condition = models.CharField(
         verbose_name=_("Item condition"), max_length=50,
         choices=Condition.choices
@@ -62,10 +65,11 @@ class ListingModel(models.Model):
     start_datetime = models.DateTimeField(
         verbose_name=_("Listing start time"),
         help_text=_("Time when listing starts at the auction (>now)"),
+        # TODO: dynamic validator (current_datetime is constant): move to clean()
         validators=[MinValueValidator(current_datetime())]
     )
     end_datetime = models.DateTimeField(
-        verbose_name=_("Listing start time"),
+        verbose_name=_("Listing star time"),
         help_text=_("Time when listing ends at the auction (>now)"),
         validators=[MinValueValidator(current_datetime())]
     )
@@ -76,6 +80,13 @@ class ListingModel(models.Model):
 
     photo_url = models.URLField(
         _("Internet photo URL for listing"), max_length=200, default="https://www.freeiconspng.com/uploads/no-image-icon-32.png")
+
+    # Integer enum functional API
+    Category = models.IntegerChoices("Category", [_("Antiques"), _("Art"), _("Baby"), _("Books"), _("Business & Industrial"), _("Cameras & Photo"), _("Cell Phones & Accessories"), _("Clothing, Shoes & Accessories"), _("Coins & Paper Money"), _("Collectibles"), _("Computers/Tablets & Networking"), _("Consumer Electronics"), _("Crafts"), _("Dolls & Bears"), _("DVDs & Movies"), _("Entertainment Memorabilia"), _(
+        "Everything Else"), _("Gift Cards & Coupons"), _("Health & Beauty"), _("Home & Garden"), _("Jewelry & Watches"), _("Music"), _("Musical Instruments & Gear"), _("Pet Supplies"), _("Pottery & Glass"), _("Real Estate"), _("Specialty Services"), _("Sporting Goods"), _("Sports Mem, Cards & Fan Shop"), _("Stamps"), _("Tickets & Experiences"), _("Toys & Hobbies"), _("Travel"), _("Video Games & Consoles"), ])
+
+    category = models.IntegerField(
+        _("Listing category"), choices=Category.choices, null=True)
 
     def clean(self):
         """Custom model validation. clean() = pass in BaseModel."""
