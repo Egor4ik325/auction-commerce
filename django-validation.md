@@ -1,3 +1,6 @@
+**Important note**: direct model instance manager.`create()`/`save()` doesn't validate (run instance.`full_clean()`).
+**Only form validate instance** (calls instance.`full_clean()`).
+
 ModelForm validation process (Form + Model instance):
 
 1. `form.is_valid()`
@@ -28,3 +31,4 @@ Model object validation:
     1. `model.clean_fields()`
     2. `model.clean()` - pass
     3. `model.validate_unique()`
+
