@@ -83,7 +83,7 @@ DATABASES = {
     # mysql -h 127.0.0.1 -P 3306 -u root -p
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',  # localhost doesn't work
+        'HOST': 'mysql',  # mysql - container hostname
         'PORT': 3306,
         'NAME': 'mysql',
         'USER': 'mysql',
