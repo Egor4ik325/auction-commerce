@@ -80,9 +80,14 @@ WSGI_APPLICATION = 'commerce.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
+    # mysql -h 127.0.0.1 -P 3306 -u root -p
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',  # localhost doesn't work
+        'PORT': 3306,
+        'NAME': 'mysql',
+        'USER': 'mysql',
+        'PASSWORD': 'mysql',
     }
 }
 
