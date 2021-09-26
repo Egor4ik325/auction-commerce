@@ -8,8 +8,8 @@ E-commerce website for making bids on created auctions.
 - [x] bids
 - [x] comments
 - [x] watchlist
-- [ ] deploy
-- [ ] turn into production-ready
+- [x] deploy
+- [x] turn into production-ready
 - [ ] ebay-like
 - [ ] win
 - [ ] 3-d party package

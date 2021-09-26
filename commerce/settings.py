@@ -42,10 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',  # ...
     'django.contrib.sessions',  # cookie-based user sessions
     'django.contrib.messages',  # django webiste notification system
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',  # js, css, png, jpg
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -131,6 +134,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = []
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Change default message tags tex

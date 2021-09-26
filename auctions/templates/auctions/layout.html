@@ -15,8 +15,9 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <!--Navigation panel-->
-        <h1>Auctions e-commerce platform</h1>
+        <image src="{% static 'auctions/logo.svg' %}" width="400" class="img-fluid d-block mx-auto" alt="Auctions. Take bids, win listings!" >
+        <hr width="50%" class="mb-5">
+        <h2>Auctions e-commerce platform</h2>
         <div>
             {% if user.is_authenticated %}
                 Signed in as <strong>{{ user.username }}</strong>.
@@ -24,6 +25,7 @@
                 Not signed in.
             {% endif %}
         </div>
+        <!--Navigation panel-->
         <nav>
             <ul class="nav">
                 <li class="nav-item">
