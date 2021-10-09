@@ -3,7 +3,7 @@ from django.forms import (
     ModelForm, modelform_factory, TimeField, DateField,
     TimeInput, DateInput, DateTimeInput, Textarea, NumberInput, HiddenInput
 )
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .models import ListingModel, BidModel, CommentModel
 
@@ -133,6 +133,6 @@ class ListingForm(ModelForm):
 BidForm = modelform_factory(BidModel, fields=('bid',),
                             widgets={'bid': NumberInput(
                                 attrs={'class': 'form-control',
-                                       'placeholder': 'Bid in $'})})
+                                       'placeholder': _('Bid in $')})})
 
 CommentForm = modelform_factory(CommentModel, fields=['comment'])

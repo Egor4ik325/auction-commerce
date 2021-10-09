@@ -4,19 +4,23 @@ E-commerce website for making bids on created auctions.
 
 ## Roadmap
 
+Some of the features I took from **Ebay**.
+I would like to use more 3-rd party Django extension libraries.
+
 - [x] listings
 - [x] bids
 - [x] comments
 - [x] watchlist
-- [x] deploy
-- turn into production-ready
+- [ ] internationalization
+- [ ] localization
+- [ ] win functionality
+- [ ] user profile
+
+- Production-ready:
    - [x] static files
    - [x] DEBUG=False
+   - [x] production MySQL
    - [x] HTTPs certificate
-- [ ] ebay-like
-- [ ] win
-- [ ] 3-d party package
-- [ ] user profile
 
 ## Specification
 

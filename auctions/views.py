@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .forms import UserCreationForm, ListingForm, BidForm, CommentForm
 from .util_datetime import current_datetime
@@ -44,7 +44,7 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, _("Invalid username or password."))
             return render(request, "auctions/login.html")
 
     else:
@@ -80,12 +80,12 @@ def register(request):
                 # or: save form model instance (data)
                 user.save()
             except IntegrityError:
-                messages.error(request, "Username already taken.")
+                messages.error(request, _("Username already taken."))
                 return render(request, "auctions/register.html")
 
             # Login into newly created user account
             login(request, user)
-            messages.info(request, "Successfuly registred new account!")
+            messages.info(request, _("Successfuly registred new account!"))
             return HttpResponseRedirect(reverse("index"))
         else:
             # Render errors from all validated form fields
@@ -112,9 +112,9 @@ def listing(request, listing_id):
     elif l.bid is not None:
         if l.bid.bidder == request.user:
             messages.success(
-                request, f"Congradulations. You won this listing by ${l.current_bid}!")
+                request, _(f"Congradulations. You won this listing by ${l.current_bid}!"))
     else:
-        messages.warning(request, "This  is not biddable.")
+        messages.warning(request, _("This  is not biddable."))
 
     # Form for commenting
     comment_form = CommentForm()
@@ -224,11 +224,11 @@ def close_listing(request, listing_id):
     # Request validation
     l = get_object_or_404(ListingModel, pk=listing_id)
     if not l.active:
-        messages.info(request, "Listing is already closed")
+        messages.info(request, _("Listing is already closed"))
     else:
         l.closed = True
         l.save()
-        messages.info(request, "Closed the listing")
+        messages.info(request, _("Closed the listing"))
     return redirect(reverse(listing, args=[listing_id]))
 
 
@@ -260,7 +260,7 @@ def bid(request, listing_id):
             raise Http404()
 
         if not l.active:
-            messages.error(request, "Listing is not active to bid.")
+            messages.error(request, _("Listing is not active to bid."))
             return redirect(reverse('listing', args=[listing_id]))
 
         # None instead of empty QueryDict()
