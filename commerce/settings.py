@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 # SECURITY WARNING: keep the secret key used in production secret!
 from .secret_key import SECRET_KEY
 from django.contrib.messages import constants
+from django.utils.translation import gettext_lazy as _
 
 import os
 
@@ -44,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',  # django webiste notification system
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',  # js, css, png, jpg
+
+    'rosetta',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +54,7 @@ MIDDLEWARE = [
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -119,7 +123,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGES = [
+    ("en", _("English")),
+    ("ru", _("Russian")),
+]
+
+LOCALE_PATHS = [ os.path.join(BASE_DIR, 'locale/') ]
+
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -128,6 +139,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

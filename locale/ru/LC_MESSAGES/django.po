@@ -1,0 +1,434 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-10 15:11+0300\n"
+"PO-Revision-Date: 2021-10-10 15:12+0230\n"
+"Last-Translator:   <>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Translated-Using: django-rosetta 0.9.7\n"
+
+#: auctions/forms.py:59 auctions/models.py:66
+msgid "Listing start time"
+msgstr "Время начала листинга"
+
+#: auctions/forms.py:62
+msgid "Listing end time"
+msgstr "Время конца листинга"
+
+#: auctions/forms.py:136
+msgid "Bid in $"
+msgstr "Ставка в $"
+
+#: auctions/models.py:27
+msgid "Watchlisted listings"
+msgstr "Листинги добавленные в список \"Посмотреть позже\""
+
+#: auctions/models.py:41
+msgid "Item seller"
+msgstr "Продавец предмета"
+
+#: auctions/models.py:42
+msgid "Enter creator of the listing"
+msgstr "Введите создателя листинга"
+
+#: auctions/models.py:46
+msgid "Listing description"
+msgstr "Описание листинга"
+
+#: auctions/models.py:47
+msgid "Description of the selling item"
+msgstr "Описание продоваемого предмета"
+
+#: auctions/models.py:53
+msgid "New"
+msgstr "Новый"
+
+#: auctions/models.py:54
+msgid "Used"
+msgstr "Б/У"
+
+#: auctions/models.py:55
+msgid "Rental"
+msgstr ""
+
+#: auctions/models.py:56
+msgid "Used - Good"
+msgstr ""
+
+#: auctions/models.py:57
+msgid "Used - Very Good"
+msgstr ""
+
+#: auctions/models.py:61
+msgid "Item condition"
+msgstr ""
+
+#: auctions/models.py:64
+msgid "Listing startign price (in $)"
+msgstr ""
+
+#: auctions/models.py:67
+msgid "Time when listing starts at the auction (>now)"
+msgstr ""
+
+#: auctions/models.py:72
+msgid "Listing star time"
+msgstr ""
+
+#: auctions/models.py:73
+msgid "Time when listing ends at the auction (>now)"
+msgstr ""
+
+#: auctions/models.py:79
+msgid "Listing before endtime closed"
+msgstr ""
+
+#: auctions/models.py:82
+msgid "Internet photo URL for listing"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Antiques"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Art"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Baby"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Books"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Business & Industrial"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Cameras & Photo"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Cell Phones & Accessories"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Clothing, Shoes & Accessories"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Coins & Paper Money"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Collectibles"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Computers/Tablets & Networking"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Consumer Electronics"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Crafts"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Dolls & Bears"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "DVDs & Movies"
+msgstr ""
+
+#: auctions/models.py:85
+msgid "Entertainment Memorabilia"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Everything Else"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Gift Cards & Coupons"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Health & Beauty"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Home & Garden"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Jewelry & Watches"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Music"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Musical Instruments & Gear"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Pet Supplies"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Pottery & Glass"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Real Estate"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Specialty Services"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Sporting Goods"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Sports Mem, Cards & Fan Shop"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Stamps"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Tickets & Experiences"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Toys & Hobbies"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Travel"
+msgstr ""
+
+#: auctions/models.py:86
+msgid "Video Games & Consoles"
+msgstr ""
+
+#: auctions/models.py:89
+msgid "Listing category"
+msgstr ""
+
+#: auctions/models.py:95
+msgid "Listing start time is greater than listing end time!"
+msgstr ""
+
+#: auctions/models.py:151
+msgid "Bidding listing"
+msgstr ""
+
+#: auctions/models.py:153
+msgid "Listing bidder"
+msgstr ""
+
+#: auctions/models.py:154
+msgid "Placed bid/price tag (in $)"
+msgstr ""
+
+#: auctions/models.py:155
+msgid "Make sure that bid is greater than current bid."
+msgstr ""
+
+#: auctions/models.py:166
+msgid "Listing owner can not be it's bidder."
+msgstr ""
+
+#: auctions/models.py:172
+msgid "Listing commented"
+msgstr ""
+
+#: auctions/models.py:175
+msgid "User commented"
+msgstr ""
+
+#: auctions/models.py:176
+msgid "Comment text"
+msgstr ""
+
+#: auctions/models.py:179
+msgid "Comment post date"
+msgstr ""
+
+#: auctions/models.py:182
+msgid "Date and time of last modification to the comment"
+msgstr ""
+
+#: auctions/templates/auctions/index.html:5
+#: auctions/templates/auctions/layout.html:33
+#, fuzzy
+#| msgid "Watchlisted listings"
+msgid "Active Listings"
+msgstr "Листинги добавленные в список \"Посмотреть позже\""
+
+#: auctions/templates/auctions/index.html:18
+msgid "Price:"
+msgstr ""
+
+#: auctions/templates/auctions/index.html:21
+msgid "Started:"
+msgstr ""
+
+#: auctions/templates/auctions/index.html:23
+msgid "Starts:"
+msgstr ""
+
+#: auctions/templates/auctions/index.html:27
+msgid "Ends:"
+msgstr ""
+
+#: auctions/templates/auctions/index.html:33
+#, fuzzy
+#| msgid "Watchlisted listings"
+msgid "No active listings"
+msgstr "Листинги добавленные в список \"Посмотреть позже\""
+
+#: auctions/templates/auctions/layout.html:8
+msgid "Auctions"
+msgstr ""
+
+#: auctions/templates/auctions/layout.html:21
+msgid "Auctions e-commerce platform"
+msgstr "Е-коммерс платформа для аукционов"
+
+#: auctions/templates/auctions/layout.html:24
+#, fuzzy
+#| msgid "Bid in $"
+msgid "Signed in as"
+msgstr "Ставка в $"
+
+#: auctions/templates/auctions/layout.html:26
+msgid "Not signed in."
+msgstr ""
+
+#: auctions/templates/auctions/layout.html:36
+msgid "My Listings"
+msgstr ""
+
+#: auctions/templates/auctions/layout.html:40
+#, fuzzy
+#| msgid "Watchlisted listings"
+msgid "Watchlist"
+msgstr "Листинги добавленные в список \"Посмотреть позже\""
+
+#: auctions/templates/auctions/layout.html:45
+msgid "Categories"
+msgstr ""
+
+#: auctions/templates/auctions/layout.html:48
+#, fuzzy
+#| msgid "Watchlisted listings"
+msgid "Create listing"
+msgstr "Листинги добавленные в список \"Посмотреть позже\""
+
+#: auctions/templates/auctions/layout.html:52
+msgid "Log Out"
+msgstr ""
+
+#: auctions/templates/auctions/layout.html:56
+msgid "Log In"
+msgstr ""
+
+#: auctions/templates/auctions/layout.html:59
+msgid "Register"
+msgstr ""
+
+#: auctions/templates/auctions/listings/add.html:13
+msgid "Submit"
+msgstr ""
+
+#: auctions/templates/auctions/login.html:6
+#: auctions/templates/auctions/login.html:18
+msgid "Login"
+msgstr ""
+
+#: auctions/templates/auctions/login.html:13
+msgid "Username"
+msgstr ""
+
+#: auctions/templates/auctions/login.html:16
+msgid "Password"
+msgstr ""
+
+#: auctions/templates/auctions/login.html:21
+msgid "Don't have an account?"
+msgstr ""
+
+#: auctions/templates/auctions/login.html:21
+msgid "Register here"
+msgstr ""
+
+#: auctions/views.py:47
+msgid "Invalid username or password."
+msgstr ""
+
+#: auctions/views.py:83
+msgid "Username already taken."
+msgstr ""
+
+#: auctions/views.py:88
+msgid "Successfuly registred new account!"
+msgstr ""
+
+#: auctions/views.py:115
+#, python-brace-format
+msgid "Congradulations. You won this listing by ${l.current_bid}!"
+msgstr ""
+
+#: auctions/views.py:117
+msgid "This  is not biddable."
+msgstr ""
+
+#: auctions/views.py:227
+msgid "Listing is already closed"
+msgstr ""
+
+#: auctions/views.py:231
+msgid "Closed the listing"
+msgstr ""
+
+#: auctions/views.py:263
+msgid "Listing is not active to bid."
+msgstr ""
+
+#: auctions/views.py:273
+#, python-format
+msgid "Bid must be >= %(current_bid)s - current bid"
+msgstr ""
+
+#: commerce/settings.py:127
+msgid "English"
+msgstr "Английский"
+
+#: commerce/settings.py:128
+msgid "Russian"
+msgstr "Русский"

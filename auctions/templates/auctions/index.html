@@ -1,7 +1,8 @@
 {% extends "auctions/layout.html" %}
+{% load i18n %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>{% trans "Active Listings" %}</h2>
     
     {% include 'auctions/messages.html' %}
 
@@ -14,22 +15,24 @@
             </div>
             <div class="flex-wrap">
                 <h4><a href="{% url 'listing' listing.listing_id %}">{{ listing.title }}</a></h4>
-                <p>Price: <em>${{ listing.starting_price }}</em></p>
+                <p>{% trans "Price:" %} <em>${{ listing.starting_price }}</em></p>
                 <p>
                 {% if listing.is_started %}
-                    Started:
+                    {% trans "Started:" %}
                 {% else %}
-                    Starts:
+                    {% trans "Starts:" %}
                 {% endif %}
                 {{ listing.start_datetime }}
                 </p>
-                <p>Ends: {{ listing.end_datetime }}</p>
+                <p>{% trans "Ends:" %} {{ listing.end_datetime }}</p>
             </div>
         </div>
         <hr>
 
     {% empty %}
-        <p>No active listings</p>
+        <p> {% blocktrans trimmed %}
+            No active listings
+        {% endblocktrans %}</p>
     {% endfor %}
 
 {% endblock %}
