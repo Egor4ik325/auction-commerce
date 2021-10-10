@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',  # django webiste notification system
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',  # js, css, png, jpg
+
+    'rosetta',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +128,7 @@ LANGUAGES = [
     ("ru", _("Russian")),
 ]
 
-LOCALE_PATHS = [ BASE_DIR / 'locale' ]
+LOCALE_PATHS = [ os.path.join(BASE_DIR, 'locale/') ]
 
 LANGUAGE_CODE = 'en'
 
